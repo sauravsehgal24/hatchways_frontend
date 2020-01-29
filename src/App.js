@@ -1,11 +1,11 @@
 import React from 'react';
-import {Button} from 'react-bootstrap'
+import HomePage from './components/homePage/homePage';
 
 function App() {
   return (
-    <div>
-      <Button>Hi</Button>
-    </div>
+   
+      <HomePage />
+    
   );
 }
 
