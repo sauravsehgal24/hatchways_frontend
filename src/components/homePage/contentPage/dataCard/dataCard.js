@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card, Image, Row,Col} from "react-bootstrap";
-import axios from "axios";
 import './dataCard.css';
 
 export default function DataCard(props) {
 
     const {order,worker} = props.data
-
   return (
     <React.Fragment>
       <Card className='card'>

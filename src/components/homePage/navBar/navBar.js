@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Navbar, Nav, Form, FormControl } from "react-bootstrap";
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-export default function NavBar() {
+export default function NavBar(props) {
   return (
     <React.Fragment>
       <Navbar
@@ -10,15 +12,12 @@ export default function NavBar() {
         variant="dark"
         style={{ boxShadow: "3px 4px 20px rgba(0, 0, 0, 0.25)" }}
       >
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="/">
           <h3>Orders Arena</h3>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link href="https://github.com/sauravsehgal24" target="_blank">
-              <strong style={{ color: "white" }}>Github</strong>
-            </Nav.Link>
             <Nav.Link
               href="https://www.linkedin.com/in/saurav-sehgal"
               target="_blank"
@@ -26,17 +25,19 @@ export default function NavBar() {
               <strong style={{ color: "white" }}>Linkedin</strong>
             </Nav.Link>
           </Nav>
+          <FormControlLabel
+            control={<Switch checked={props.toggle} onChange={props.updateToggle} />}
+            label={props.toggle? 'Latest First':'Earliest First'}
+            style={{color:'white'}}
+            id="deadline-input"
+          />
           <Form inline>
-            <Form.Check
-              className="ml-6"
-              type="switch"
-              id="custom-switch"
-              label=""
-            />
             <FormControl
               type="text"
-              placeholder="Search Order"
-              className="mr-sm-2"
+              id="name-input"
+              placeholder="Search by worker name"
+              onChange={(e)=>{props.changeSearchValue(e.target.value)}}
+              style={{width:'100%'}}
             />
           </Form>
         </Navbar.Collapse>

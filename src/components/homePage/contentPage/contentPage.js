@@ -5,25 +5,14 @@ import "./contentPage.css";
 //components
 import DataCard from "./dataCard/dataCard";
 
-export default function ContentPage() {
-  const [ordersState, setOrdersState] = useState({
-    orders: []
-  });
-
-  const [workersState, setWorkersState] = useState({
-    workers: []
-  });
-
+export default function ContentPage(props) {
   const [cardsState, setCardsState] = useState({
     cards: []
   });
 
-  var workers = [];
-
   const setCards = res => {
     var cardsLocal = [];
     const orders = res.data.orders;
-
     orders.map(order => {
       axios
         .get(
@@ -35,7 +24,6 @@ export default function ContentPage() {
             order,
             worker
           };
-
           cardsLocal.push(card);
           setCardsState({
             cards: cardsLocal
@@ -47,21 +35,6 @@ export default function ContentPage() {
     });
   };
 
-  // const getWorker = (id) =>{
-
-  //             axios.get('https://www.hatchways.io/api/assessment/workers/'+id)
-  //             .then((res)=>{
-  //                 const worker = res.data.worker
-  //                 console.log(worker)
-  //                 workers.push(worker)
-  //                 setWorkersState({
-  //                     workers:workers
-  //                 })
-  //             })
-  //             .catch((err)=>console.log(err))
-
-  // }
-
   useEffect(() => {
     axios
       .get("https://www.hatchways.io/api/assessment/work_orders")
@@ -71,11 +44,19 @@ export default function ContentPage() {
       .catch(err => console.log(err));
   }, []);
 
+  var filteredCards = cardsState.cards.sort((c1,c2)=>{
+    if(!props.toggle && c1.order.deadline > c2.order.deadline) return 1
+    else  return -1
+  }).
+    filter((card)=>{
+    return card.worker.name.indexOf(props.searchData) !== -1
+    })
+
   return (
     <React.Fragment>
       <Container className="contentPageContainer" fluid>
         <Row>
-          {cardsState.cards.map(card => {
+          {filteredCards.map(card => {
             return (
               <Col>
                 <DataCard data={card} />
