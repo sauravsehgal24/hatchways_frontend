@@ -11,16 +11,33 @@ export default function ContentPage(props) {
   });
 
   const setCards = res => {
+    // localStorage.clear()
+    var counter=0;
     var cardsLocal = [];
     const orders = res.data.orders;
     orders.map(order => {
+      if(localStorage.getItem(`${order.workerId}`) != null) {
+        const worker = JSON.parse(localStorage.getItem(`${order.workerId}`)) 
+        const card = { 
+          order,
+          worker
+        };
+        cardsLocal.push(card);
+        setCardsState({
+          cards: cardsLocal
+        });
+      }
+      else{
       axios
         .get(
           "https://www.hatchways.io/api/assessment/workers/" + order.workerId
         )
         .then(res => {
+          counter++; 
+          console.log(counter)
           const { worker } = res.data;
-          const card = {
+          localStorage.setItem(`${order.workerId}`,JSON.stringify(worker))
+          const card = { 
             order,
             worker
           };
@@ -30,9 +47,11 @@ export default function ContentPage(props) {
           });
         })
         .catch(err => {
-          console.log(`error fetching worker`);
+          console.log(`error fetching worker ${err}`);
         });
+      }
     });
+  
   };
 
   useEffect(() => {
@@ -49,7 +68,7 @@ export default function ContentPage(props) {
     else  return -1
   }).
     filter((card)=>{
-    return card.worker.name.indexOf(props.searchData) !== -1
+    return card.worker.name.toLowerCase().indexOf(props.searchData.toLowerCase()) !== -1
     })
 
   return (
